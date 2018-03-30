@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<canvas id="canvas" width="800" height="600"></canvas>
+	<script>
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		var instance = 20;//指示钟点线段长度
+		var timer = setInterval(function(){//刷新画布
+			var d = new Date();//获取时间
+			var s = d.getSeconds();
+			var m = d.getMinutes();
+			var h = d.getHours();
+			if(h>12) h=h-12;
+			var deg = s*6/360*(Math.PI*2);//秒针角度
+			var deg1 = (m*6+s*6/360*6)/360*(Math.PI*2);//分针角度
+			var deg2 = (h*30+m*6/360*30)/360*(Math.PI*2);//时针角度
+			ctx.clearRect(0,0,800,600);//清空画布
+			ctx.beginPath();
+			ctx.arc(400,300,200,0,2*Math.PI,true);//画表盘
+			for(var i = 0;i<12;i++){//画钟点线段
+				var startX = 400+200*Math.sin(i*30/360*(Math.PI*2));
+				var startY = 300-200*Math.cos(i*30/360*(Math.PI*2));
+				var endX = startX-instance*Math.sin(i*30/360*(Math.PI*2));
+				var endY = startY+instance*Math.cos(i*30/360*(Math.PI*2));
+				ctx.moveTo(startX,startY);
+				ctx.lineTo(endX,endY);
+			}
+			console.log(startX,startY);
+			console.log(endX,endY);
+			var s_length = Math.sqrt(100*100+100*100);//秒针长度
+			ctx.moveTo(400,300);//画秒针
+			ctx.lineTo((400+s_length*Math.sin(deg)),(300-s_length*Math.cos(deg)));
+			ctx.moveTo(400,300);//画分针
+			ctx.lineTo((400+130*Math.sin(deg1)),(300-130*Math.cos(deg1)));
+			ctx.moveTo(400,300);//画时针
+			ctx.lineTo((400+100*Math.sin(deg2)),(300-100*Math.cos(deg2)));
+			ctx.stroke();
+		},1000);
+	</script>
+</body>
+</html>
